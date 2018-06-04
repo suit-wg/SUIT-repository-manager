@@ -3,7 +3,7 @@
     <form action="/files" method="post" accept-charset="utf-8"
       enctype="multipart/form-data">
 
-    <label for="fw">firmware</label>
+    <label for="fw">firmware or manifest: </label>
     <input id="fw" name="firmware" type="file" value=""/>
 
     <input type="submit" value="submit"/>
@@ -24,13 +24,13 @@
     {% endfor %}
     </table>
 
-    <label for="target">target</label>
+    <label for="target">CoAP URL</label>
     <input id="target" type="text" name="target"
     value="coap://target.host/local/part"><br>
 
     <label for="signed">Cose signed</label>
     <input id="signed" type="checkbox" name="signed"><br>
-
+    <!-- document -->
     <input type="submit" value="submit"/>
     </form>
     </body>

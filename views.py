@@ -9,7 +9,16 @@ import logging
 
 
 async def index(request):
-    return web.Response(text='Hello world!')
+    text = """
+    This website is a test server for the SUIT hackathon. Presented here is a
+    small file (1MB max) storage for firmware binaries and SUIT manifests.
+    Everything is publicly available without any restrictions, so BE CAREFUL
+    with what you upload here.
+
+    If you agree with these conditions, please continue to /files for actual
+    functionality.
+    """
+    return web.Response(text=text)
 
 
 @aiohttp_jinja2.template('files.jinja2')
@@ -52,7 +61,7 @@ async def file_by_digest(request):
 async def coap_send(request):
     data = await request.post()
     target = data['target']
-    sign = True if 'signed' in data else False
+    # sign = True if 'signed' in data else False
     digest = data['file']
     fw = None
     logging.info("CoAP send requested with {} to {}".format(digest, target))
