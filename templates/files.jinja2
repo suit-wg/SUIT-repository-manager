@@ -8,10 +8,30 @@
 
     <input type="submit" value="submit"/>
     </form>
-    <ul>
+
+    <form action="/coap_send" method="post" accept-charset="utf-8">
+    <table>
+        <tr>
+        <th></th><th>name</th><th>SHA1 truncated</th><th>size</th>
+        </tr>
     {% for file in files %}
-        <li><a href = "{{ file.url }}">{{file.digest}} - {{ file.path.name }}</a>
+        <tr>
+        <th><input type="radio" name="file" value="{{file.digest}}"></th>
+        <th>{{ file.path.name }} </th>
+        <th><a href = "{{ file.url }}">{{file.digest}}</th>
+        <th>{{ file.path.stat().st_size }}B</th>
+        </tr>
     {% endfor %}
-    </ul>
+    </table>
+
+    <label for="target">target</label>
+    <input id="target" type="text" name="target"
+    value="coap://target.host/local/part"><br>
+
+    <label for="signed">Cose signed</label>
+    <input id="signed" type="checkbox" name="signed"><br>
+
+    <input type="submit" value="submit"/>
+    </form>
     </body>
 </html>

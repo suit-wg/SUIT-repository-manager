@@ -1,6 +1,7 @@
 import resources
 
 from aiohttp import web
+import aiocoap
 import aiohttp_jinja2
 from multidict import MultiDict
 
@@ -46,3 +47,31 @@ async def file_by_digest(request):
                       'Attachment;filename={}'.format(req_fw.path.name)})
     return web.Response(headers=hdrs,
                         body=data)
+
+
+async def coap_send(request):
+    data = await request.post()
+    target = data['target']
+    sign = True if 'signed' in data else False
+    digest = data['file']
+    fw = None
+    logging.info("CoAP send requested with {} to {}".format(digest, target))
+    for upload in request.app['uploads']:
+        if upload.digest == digest:
+            fw = upload
+    if not fw:
+        raise web.HTTPNotFound
+    with fw.path.open('rb') as f:
+        content = f.read()
+
+    protocol = await aiocoap.Context.create_client_context()
+    request = aiocoap.Message(code=aiocoap.POST, uri=target, payload=content)
+    try:
+        await protocol.request(request).response
+    except Exception as e:
+        logging.warning("Error sending coap request: ".format(e))
+        return web.Response(text="Error sending file {}"
+                                 " to target {}".format(fw.path.name,
+                                                        target))
+    return web.Response(text="Sent file {} to target {}".format(fw.path.name,
+                                                                target))
