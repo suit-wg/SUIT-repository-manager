@@ -1,0 +1,17 @@
+<html>
+    <body>
+    <form action="/files" method="post" accept-charset="utf-8"
+      enctype="multipart/form-data">
+
+    <label for="fw">firmware</label>
+    <input id="fw" name="firmware" type="file" value=""/>
+
+    <input type="submit" value="submit"/>
+    </form>
+    <ul>
+    {% for file in files %}
+        <li><a href = "{{ file.url }}">{{file.digest}} - {{ file.path.name }}</a>
+    {% endfor %}
+    </ul>
+    </body>
+</html>
